@@ -1,6 +1,9 @@
 from models.dishes import (
-    Dish, add_dish, find_dish_by_id,
-    find_dishes_by_name, filter_dishes_by_category,
+    Dish,
+    add_dish,
+    find_dish_by_id,
+    find_dishes_by_name,
+    filter_dishes_by_category,
     sort_dishes_by_price,
 )
 

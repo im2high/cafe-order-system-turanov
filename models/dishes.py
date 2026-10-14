@@ -1,8 +1,7 @@
 class Dish:
     """Блюдо в меню."""
 
-    def __init__(self, dish_id: int, name: str,
-                 price: float, category: str) -> None:
+    def __init__(self, dish_id: int, name: str, price: float, category: str) -> None:
         self.id = dish_id
         self.name = name
         self.price = price
@@ -14,8 +13,9 @@ class Dish:
         return f"{prefix} ({self.category}) — {self.price:.2f} руб."
 
 
-def add_dish(dishes: list[Dish], dish_id: int, name: str,
-             price: float, category: str) -> Dish:
+def add_dish(
+    dishes: list[Dish], dish_id: int, name: str, price: float, category: str
+) -> Dish:
     dish = Dish(dish_id, name, price, category)
     dishes.append(dish)
     return dish

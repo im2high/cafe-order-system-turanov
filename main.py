@@ -1,19 +1,31 @@
 """Точка входа в приложение «Система учёта заказов кафе»."""
+
 from models.dishes import (
-    add_dish, find_dishes_by_name, show_dishes, find_dish_by_id,
+    add_dish,
+    find_dishes_by_name,
+    show_dishes,
+    find_dish_by_id,
 )
 from models.employees import (
-    add_employee, show_employees, find_employee_by_id,
+    add_employee,
+    show_employees,
+    find_employee_by_id,
 )
 from models.orders import (
-    create_order, cancel_order, filter_orders_by_status,
-    get_orders_statistics, show_orders,
+    create_order,
+    cancel_order,
+    filter_orders_by_status,
+    get_orders_statistics,
+    show_orders,
 )
 from models.statuses import Status
 from storage import (
-    load_dishes, save_dishes,
-    load_employees, save_employees,
-    load_orders, save_orders,
+    load_dishes,
+    save_dishes,
+    load_employees,
+    save_employees,
+    load_orders,
+    save_orders,
 )
 from utils import input_int, input_float, input_date, input_non_empty
 
@@ -136,10 +148,7 @@ def main() -> None:
             if cancel_order(orders, order_id):
                 print("Заказ отменён.")
             else:
-                print(
-                    "Не удалось отменить "
-                    "(не найден или статус не позволяет)."
-                )
+                print("Не удалось отменить " "(не найден или статус не позволяет).")
 
         elif choice == "10":
             stats = get_orders_statistics(orders)

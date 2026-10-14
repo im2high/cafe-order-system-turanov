@@ -46,3 +46,23 @@ pytest -v
 
 ## Проверка качества
 flake8 .
+
+## Веб-интерфейс (ПР5)
+
+Django-проект `cafe` с приложениями `homepage`, `dishes`, `employees`, `orders`.
+
+### Страницы
+
+- `/` — главная
+- `/dishes/` — список блюд
+- `/dishes/<id>/` — карточка блюда
+- `/employees/` — список сотрудников
+- `/employees/<id>/` — карточка сотрудника
+- `/orders/` — список заказов
+- `/orders/<id>/` — карточка заказа
+
+### Запуск
+
+python manage.py migrate
+python manage.py runserver
+# открыть http://127.0.0.1:8000/

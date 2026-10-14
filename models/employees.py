@@ -9,15 +9,15 @@ class Employee:
         return f"[{self.id}] {self.name} — {self.position}"
 
 
-def add_employee(employees: list[Employee], employee_id: int,
-                 name: str, position: str) -> Employee:
+def add_employee(
+    employees: list[Employee], employee_id: int, name: str, position: str
+) -> Employee:
     employee = Employee(employee_id, name, position)
     employees.append(employee)
     return employee
 
 
-def find_employee_by_id(employees: list[Employee],
-                        employee_id: int) -> Employee | None:
+def find_employee_by_id(employees: list[Employee], employee_id: int) -> Employee | None:
     for employee in employees:
         if employee.id == employee_id:
             return employee

@@ -1,4 +1,5 @@
 """Работа с заказами."""
+
 from typing import List, Optional
 
 from models.dishes import Dish
@@ -70,8 +71,9 @@ class Order:
         )
 
 
-def create_order(orders: List[Order], order_id: int,
-                 employee: Employee, order_date: str) -> Order:
+def create_order(
+    orders: List[Order], order_id: int, employee: Employee, order_date: str
+) -> Order:
     """Создать заказ и добавить в список."""
     order = Order(order_id, employee, order_date)
     orders.append(order)

@@ -1,5 +1,7 @@
 from models.employees import (
-    Employee, add_employee, find_employee_by_id,
+    Employee,
+    add_employee,
+    find_employee_by_id,
 )
 
 
