@@ -1,7 +1,7 @@
 from models.dishes import Dish
 from models.employees import Employee
 from models.orders import (
-    Order, create_order, find_order_by_id, cancel_order,
+    Order, create_order, find_order_by_id,
     filter_orders_by_status, get_orders_statistics,
 )
 from models.statuses import Status
@@ -20,6 +20,18 @@ def test_order_creation():
     assert order.id == 1
     assert order.status == Status.NEW
     assert len(order.items) == 1
+
+
+def test_order_creation_with_items():
+    """Проверить, что items можно передать прямо в конструктор."""
+    employee = Employee(1, "Анна", "Официант")
+    dish = Dish(1, "Капучино", 180.5, "Напитки")
+    order = Order(
+        1, employee, "2026-09-15",
+        items=[{"dish": dish, "quantity": 2}],
+    )
+    assert len(order.items) == 1
+    assert order.calculate_total() == 361.0
 
 
 def test_order_total():

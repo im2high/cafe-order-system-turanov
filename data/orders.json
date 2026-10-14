@@ -5,8 +5,14 @@
     "order_date": "2026-09-15",
     "status": "new",
     "items": [
-      {"dish_id": 1, "quantity": 2},
-      {"dish_id": 2, "quantity": 1}
+      {
+        "dish_id": 1,
+        "quantity": 2
+      },
+      {
+        "dish_id": 2,
+        "quantity": 1
+      }
     ]
   }
 ]

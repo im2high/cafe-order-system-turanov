@@ -9,7 +9,9 @@ class Dish:
         self.category = category
 
     def __str__(self) -> str:
-        return f"[{self.id}] {self.name} ({self.category}) — {self.price:.2f} руб."
+        """Вернуть строковое представление блюда."""
+        prefix = f"[{self.id}] {self.name}"
+        return f"{prefix} ({self.category}) — {self.price:.2f} руб."
 
 
 def add_dish(dishes: list[Dish], dish_id: int, name: str,

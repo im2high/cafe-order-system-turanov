@@ -1,5 +1,7 @@
+"""Загрузка и сохранение JSON-файлов."""
 import json
 import os
+from typing import List
 
 from models.dishes import Dish, find_dish_by_id
 from models.employees import Employee, find_employee_by_id
@@ -13,11 +15,13 @@ ORDERS_FILE = "data/orders.json"
 
 
 def ensure_data_dir() -> None:
+    """Создать папку data, если её ещё нет."""
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
 
 
-def load_dishes(filename: str = DISHES_FILE) -> list[Dish]:
+def load_dishes(filename: str = DISHES_FILE) -> List[Dish]:
+    """Прочитать блюда из JSON."""
     ensure_data_dir()
     if not os.path.exists(filename):
         return []
@@ -36,7 +40,8 @@ def load_dishes(filename: str = DISHES_FILE) -> list[Dish]:
     return dishes
 
 
-def save_dishes(dishes: list[Dish], filename: str = DISHES_FILE) -> None:
+def save_dishes(dishes: List[Dish], filename: str = DISHES_FILE) -> None:
+    """Записать блюда в JSON. Объект → словарь."""
     ensure_data_dir()
     data = []
     for dish in dishes:
@@ -50,7 +55,8 @@ def save_dishes(dishes: list[Dish], filename: str = DISHES_FILE) -> None:
         json.dump(data, file, ensure_ascii=False, indent=2)
 
 
-def load_employees(filename: str = EMPLOYEES_FILE) -> list[Employee]:
+def load_employees(filename: str = EMPLOYEES_FILE) -> List[Employee]:
+    """Прочитать сотрудников из JSON."""
     ensure_data_dir()
     if not os.path.exists(filename):
         return []
@@ -69,8 +75,9 @@ def load_employees(filename: str = EMPLOYEES_FILE) -> list[Employee]:
     return employees
 
 
-def save_employees(employees: list[Employee],
+def save_employees(employees: List[Employee],
                    filename: str = EMPLOYEES_FILE) -> None:
+    """Записать сотрудников в JSON."""
     ensure_data_dir()
     data = []
     for employee in employees:
@@ -83,8 +90,9 @@ def save_employees(employees: list[Employee],
         json.dump(data, file, ensure_ascii=False, indent=2)
 
 
-def load_orders(dishes: list[Dish], employees: list[Employee],
-                filename: str = ORDERS_FILE) -> list[Order]:
+def load_orders(dishes: List[Dish], employees: List[Employee],
+                filename: str = ORDERS_FILE) -> List[Order]:
+    """Загрузить заказы и восстановить связи с блюдами и сотрудниками."""
     ensure_data_dir()
     if not os.path.exists(filename):
         return []
@@ -104,19 +112,29 @@ def load_orders(dishes: list[Dish], employees: list[Employee],
                   f"заказ {item['id']} пропущен.")
             continue
 
-        order = Order(item["id"], employee, item["order_date"],
-                      item.get("status", Status.NEW))
-
-        items = item.get("items", [])
-        for dish_data in items:
+        # Собираем список блюд заранее и передаём в конструктор Order
+        items_list = []
+        for dish_data in item.get("items", []):
             dish = find_dish_by_id(dishes, dish_data["dish_id"])
             if dish is not None:
-                order.add_item(dish, dish_data["quantity"])
+                items_list.append({
+                    "dish": dish,
+                    "quantity": dish_data["quantity"],
+                })
+
+        order = Order(
+            item["id"],
+            employee,
+            item["order_date"],
+            items=items_list,
+            status=item.get("status", Status.NEW),
+        )
         orders.append(order)
     return orders
 
 
-def save_orders(orders: list[Order], filename: str = ORDERS_FILE) -> None:
+def save_orders(orders: List[Order], filename: str = ORDERS_FILE) -> None:
+    """Сохранить заказы: объекты → id-шники."""
     ensure_data_dir()
     data = []
     for order in orders:

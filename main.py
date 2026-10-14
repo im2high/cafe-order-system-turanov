@@ -1,3 +1,4 @@
+"""Точка входа в приложение «Система учёта заказов кафе»."""
 from models.dishes import (
     add_dish, find_dishes_by_name, show_dishes, find_dish_by_id,
 )
@@ -18,6 +19,7 @@ from utils import input_int, input_float, input_date, input_non_empty
 
 
 def get_next_id(items: list) -> int:
+    """Получить следующий свободный id."""
     max_id = 0
     for item in items:
         if item.id > max_id:
@@ -41,6 +43,7 @@ def show_menu() -> None:
 
 
 def create_new_order(orders: list, dishes: list, employees: list) -> None:
+    """Диалог создания заказа."""
     if len(dishes) == 0:
         print("Нет блюд. Сначала добавьте блюда.")
         return
@@ -80,6 +83,7 @@ def create_new_order(orders: list, dishes: list, employees: list) -> None:
 
 
 def main() -> None:
+    """Основной цикл программы."""
     dishes = load_dishes()
     employees = load_employees()
     orders = load_orders(dishes, employees)
@@ -121,7 +125,8 @@ def main() -> None:
             show_orders(orders)
 
         elif choice == "8":
-            print("Доступные статусы:", ", ".join(Status.DESCRIPTIONS.keys()))
+            statuses = ", ".join(Status.DESCRIPTIONS.keys())
+            print(f"Доступные статусы: {statuses}")
             status = input_non_empty("Статус: ")
             result = filter_orders_by_status(orders, status)
             show_orders(result)
@@ -131,7 +136,10 @@ def main() -> None:
             if cancel_order(orders, order_id):
                 print("Заказ отменён.")
             else:
-                print("Не удалось отменить (не найден или статус не позволяет).")
+                print(
+                    "Не удалось отменить "
+                    "(не найден или статус не позволяет)."
+                )
 
         elif choice == "10":
             stats = get_orders_statistics(orders)
