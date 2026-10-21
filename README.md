@@ -66,3 +66,15 @@ Django-проект `cafe` с приложениями `homepage`, `dishes`, `em
 python manage.py migrate
 python manage.py runserver
 # открыть http://127.0.0.1:8000/
+
+## Шаблоны Django (ПР6)
+
+- Базовый шаблон `templates/base.html`.
+- Наследование `{% extends %}` + `{% block title %}`, `{% block content %}`.
+- Включаемые шаблоны: `includes/navigation.html`, карточки, статус заказа.
+- Данные через контекст в `render()`.
+- Циклы `{% for %}`, условия `{% if %}`, `{% empty %}`.
+- Именованные URL с пространствами имён (`dishes:list`, `orders:detail`).
+- Фильтры: `|length`, `|floatformat:2`, `|default:"..."`.
+- Статика: `homepage/static/homepage/{css,js,img}/`.
+- Функция `page()` удалена, весь веб-интерфейс на `render()`.

@@ -1,3 +1,1 @@
-from django.test import TestCase
-
-# Create your tests here.
+"""Тесты приложения (будут добавлены в ПР13-ПР15)."""

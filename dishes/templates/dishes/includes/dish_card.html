@@ -1,0 +1,10 @@
+<div class="col-md-4 mb-3">
+    <article class="card dish-card">
+        <div class="card-body">
+            <h5 class="card-title">{{ dish.name|default:"Без названия" }}</h5>
+            <p class="card-text">Цена: {{ dish.price|floatformat:2 }} руб.</p>
+            <p class="card-text">Категория: {{ dish.category }}</p>
+            <a href="{% url 'dishes:detail' dish.id %}" class="btn btn-primary">Подробнее</a>
+        </div>
+    </article>
+</div>

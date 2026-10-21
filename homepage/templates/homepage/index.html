@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — Кафе{% endblock %}
+
+{% block content %}
+<h1 class="display-4">Система учёта заказов кафе</h1>
+<p class="lead">Консольная версия (ПР3) дополнена веб-интерфейсом на Django.</p>
+<p>Основные разделы:</p>
+<a href="{% url 'dishes:list' %}" class="btn btn-primary me-2">Блюда</a>
+<a href="{% url 'employees:list' %}" class="btn btn-secondary me-2">Сотрудники</a>
+<a href="{% url 'orders:list' %}" class="btn btn-success">Заказы</a>
+{% endblock %}

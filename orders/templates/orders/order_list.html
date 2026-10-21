@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Заказы — Кафе{% endblock %}
+
+{% block content %}
+<h1>Заказы</h1>
+<p>Всего заказов: {{ orders|length }}</p>
+
+{% for order in orders %}
+    {% include "orders/includes/order_card.html" %}
+{% empty %}
+    <p>Заказы не найдены.</p>
+{% endfor %}
+{% endblock %}

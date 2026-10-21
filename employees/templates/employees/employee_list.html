@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Сотрудники — Кафе{% endblock %}
+
+{% block content %}
+<h1>Сотрудники</h1>
+<p>Всего сотрудников: {{ employees|length }}</p>
+
+<div class="row">
+    {% for employee in employees %}
+        {% include "employees/includes/employee_card.html" %}
+    {% empty %}
+        <p>Сотрудники не найдены.</p>
+    {% endfor %}
+</div>
+{% endblock %}

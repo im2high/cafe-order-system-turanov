@@ -1,3 +1,1 @@
-from django.db import models
-
-# Create your models here.
+"""Модели приложения (будут добавлены в следующих ПР)."""

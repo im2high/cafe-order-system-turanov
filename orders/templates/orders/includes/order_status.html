@@ -1,0 +1,17 @@
+{% if order.status == "cancelled" %}
+    <span class="badge bg-secondary order-status order-status-cancelled">
+        Отменён
+    </span>
+{% elif order.status == "completed" %}
+    <span class="badge bg-info order-status">
+        Завершён
+    </span>
+{% elif order.status == "ready" %}
+    <span class="badge bg-primary order-status">
+        Готов к выдаче
+    </span>
+{% else %}
+    <span class="badge bg-success order-status order-status-active">
+        {{ order.get_status_description }}
+    </span>
+{% endif %}

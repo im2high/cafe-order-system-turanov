@@ -1,0 +1,44 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.roomly-logo {
+    max-height: 40px;
+    margin-right: 12px;
+}
+
+.dish-card,
+.employee-card,
+.order-card {
+    border-left: 4px solid #0d6efd;
+    transition: transform 0.15s ease-in-out;
+}
+
+.dish-card:hover,
+.employee-card:hover,
+.order-card:hover {
+    transform: translateY(-2px);
+}
+
+.order-status {
+    font-size: 0.9rem;
+    padding: 0.35em 0.6em;
+}
+
+.order-status-active {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.order-status-cancelled {
+    font-style: italic;
+    text-decoration: line-through;
+    opacity: 0.85;
+}
+
+footer {
+    border-top: 1px solid #dee2e6;
+    padding-top: 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
