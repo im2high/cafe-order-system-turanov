@@ -78,3 +78,13 @@ python manage.py runserver
 - Фильтры: `|length`, `|floatformat:2`, `|default:"..."`.
 - Статика: `homepage/static/homepage/{css,js,img}/`.
 - Функция `page()` удалена, весь веб-интерфейс на `render()`.
+
+## База данных (ПР7)
+
+- SQLite: `data/cafe.sqlite`
+- Схема: `sql/schema.sql` (таблицы `dishes`, `employees`, `orders`, `order_items`)
+- Импорт из JSON: `db/import_json.py`
+- Подключение: `db/database.py` (с `PRAGMA foreign_keys = ON`)
+- SQL-запросы: `sql/queries.sql` (12 запросов: SELECT, WHERE, JOIN, агрегаты, GROUP BY)
+- Данные из БД используются в Django-представлениях (через `sqlite3.Row`)
+- Реализована страница статистики `/orders/statistics/`

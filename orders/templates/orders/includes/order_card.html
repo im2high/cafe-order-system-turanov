@@ -2,17 +2,8 @@
     <div class="card-body">
         <h5 class="card-title">Заказ №{{ order.id }}</h5>
         <p class="card-text">Дата: {{ order.order_date }}</p>
-        <p class="card-text">Сотрудник: {{ order.employee.name }}</p>
-        <p class="card-text">
-            Сумма: {{ order.calculate_total|floatformat:2 }} руб.
-        </p>
-        <p class="card-text">
-            Статус:
-            {% include "orders/includes/order_status.html" %}
-        </p>
-        <a href="{% url 'orders:detail' order.id %}"
-           class="btn btn-primary">
-            Подробнее
-        </a>
+        <p class="card-text">Сотрудник: {{ order.employee_name }}</p>
+        <p class="card-text">Статус: {{ order.status }}</p>
+        <a href="{% url 'orders:detail' order.id %}" class="btn btn-primary">Подробнее</a>
     </div>
 </div>

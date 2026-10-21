@@ -1,40 +1,27 @@
 {% extends "base.html" %}
-
 {% block title %}
 {% if order %}Заказ №{{ order.id }} — Кафе{% else %}Заказ не найден{% endif %}
 {% endblock %}
-
 {% block content %}
 {% if order %}
 <div class="card">
     <div class="card-body">
         <h1 class="card-title">Заказ №{{ order.id }}</h1>
         <p><strong>Дата:</strong> {{ order.order_date }}</p>
-        <p><strong>Сотрудник:</strong> {{ order.employee.name }}</p>
-        <p>
-            <strong>Блюда:</strong>
-            {% for item in order.items %}
-                {{ item.dish.name }} × {{ item.quantity }}{% if not forloop.last %}, {% endif %}
+        <p><strong>Сотрудник:</strong> {{ order.employee_name }}</p>
+        <p><strong>Статус:</strong> {{ order.status }}</p>
+        <h2 class="h5 mt-3">Состав заказа</h2>
+        <ul>
+            {% for item in items %}
+                <li>{{ item.dish_name }} × {{ item.quantity }} = {{ item.total|floatformat:2 }} руб.</li>
             {% empty %}
-                нет блюд
+                <li>Блюда не добавлены.</li>
             {% endfor %}
-        </p>
-        <p>
-            <strong>Сумма:</strong>
-            {{ order.calculate_total|floatformat:2 }} руб.
-        </p>
-        <p>
-            <strong>Статус:</strong>
-            {% include "orders/includes/order_status.html" %}
-        </p>
+        </ul>
     </div>
 </div>
 {% else %}
 <h1 class="text-danger">Заказ не найден</h1>
-<p>Заказ с указанным идентификатором отсутствует.</p>
 {% endif %}
-
-<a href="{% url 'orders:list' %}" class="btn btn-outline-secondary mt-3">
-    ← к списку заказов
-</a>
+<a href="{% url 'orders:list' %}" class="btn btn-outline-secondary mt-3">← к списку заказов</a>
 {% endblock %}

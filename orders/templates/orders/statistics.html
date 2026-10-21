@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Статистика — Кафе{% endblock %}
+{% block content %}
+<h1>Статистика заказов</h1>
+
+<h2>По статусам</h2>
+<ul>
+    {% for stat in status_stats %}
+        <li>{{ stat.status }}: {{ stat.count }}</li>
+    {% empty %}
+        <li>Нет данных.</li>
+    {% endfor %}
+</ul>
+
+<h2>Популярные блюда</h2>
+<ul>
+    {% for dish in top_dishes %}
+        <li>{{ dish.dish_name }}: {{ dish.total_quantity }} шт.</li>
+    {% empty %}
+        <li>Нет данных.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
