@@ -2,10 +2,58 @@
 {% block title %}Заказы — Кафе{% endblock %}
 {% block content %}
 <h1>Заказы</h1>
-<p>Всего заказов: {{ orders|length }}</p>
-{% for order in orders %}
+<form method="get" class="mb-3">
+    <p>
+        <label for="order-search">Поиск по сотруднику или блюду</label>
+        <input id="order-search" type="search" name="q" value="{{ search }}">
+    </p>
+    <p>
+        <label for="order-employee">Имя сотрудника</label>
+        <input id="order-employee" type="text" name="employee" value="{{ employee_name }}">
+    </p>
+    <p>
+        <label for="order-status">Статус</label>
+        <select id="order-status" name="status">
+            <option value="">Все</option>
+            {% for value, label in status_choices %}
+                <option value="{{ value }}"{% if status == value %} selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+        <label>
+            <input type="checkbox" name="hide_cancelled" value="1"{% if hide_cancelled %} checked{% endif %}>
+            Скрыть отменённые
+        </label>
+    </p>
+    <p>
+        <label for="order-sort">Сортировка</label>
+        <select id="order-sort" name="sort">
+            <option value="newest"{% if sort == "newest" %} selected{% endif %}>Сначала новые</option>
+            <option value="oldest"{% if sort == "oldest" %} selected{% endif %}>Сначала старые</option>
+            <option value="employee"{% if sort == "employee" %} selected{% endif %}>По сотруднику</option>
+        </select>
+    </p>
+    <button type="submit">Применить</button>
+    <a href="{% url 'orders:list' %}">Сбросить</a>
+</form>
+
+<p>Всего заказов: {{ page.paginator.count }}</p>
+{% for order in page %}
     {% include "orders/includes/order_card.html" %}
 {% empty %}
     <p>Заказы не найдены.</p>
 {% endfor %}
+
+{% if page.has_other_pages %}
+    <nav aria-label="Страницы заказов">
+        {% if page.has_previous %}
+            <a href="{% querystring page=page.previous_page_number %}">Назад</a>
+        {% endif %}
+        <span>Страница {{ page.number }} из {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}
+            <a href="{% querystring page=page.next_page_number %}">Далее</a>
+        {% endif %}
+    </nav>
+{% endif %}
 {% endblock %}

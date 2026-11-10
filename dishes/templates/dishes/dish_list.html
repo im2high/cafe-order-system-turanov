@@ -1,7 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Блюда — Кафе{% endblock %}
+{% block title %}Блюда - Кафе{% endblock %}
 {% block content %}
 <h1>Блюда</h1>
+<form method="get" class="mb-3">
+    <label for="dish-search">Название блюда</label>
+    <input id="dish-search" type="search" name="q" value="{{ search }}">
+    <button type="submit">Найти</button>
+    <a href="{% url 'dishes:list' %}">Сбросить</a>
+</form>
 <p>Всего блюд: {{ dishes|length }}</p>
 <div class="row">
     {% for dish in dishes %}

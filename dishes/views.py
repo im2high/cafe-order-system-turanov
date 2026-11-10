@@ -1,29 +1,19 @@
-"""Страницы блюд через SQLite."""
-import sqlite3
-
 from django.shortcuts import render
 
-DB_PATH = "data/cafe.sqlite"
+from .models import Dish
 
 
 def dishes(request):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    dishes_list = conn.execute(
-        "SELECT id, name, price, category FROM dishes ORDER BY name"
-    ).fetchall()
-    conn.close()
-    return render(request, "dishes/dish_list.html", {"dishes": dishes_list})
+    search = request.GET.get("q", "").strip()
+    dishes_list = Dish.objects.order_by("name")
+    if search:
+        dishes_list = dishes_list.filter(name__icontains=search)
+
+    return render(request, "dishes/dish_list.html", {"dishes": dishes_list, "search": search})
 
 
 def dish_detail(request, dish_id):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    dish = conn.execute(
-        "SELECT id, name, price, category FROM dishes WHERE id = ?",
-        [dish_id],
-    ).fetchone()
-    conn.close()
+    dish = Dish.objects.filter(pk=dish_id).first()
     return render(
         request,
         "dishes/dish_detail.html",

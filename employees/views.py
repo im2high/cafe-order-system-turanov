@@ -1,29 +1,15 @@
-"""Страницы сотрудников через SQLite."""
-import sqlite3
-
 from django.shortcuts import render
 
-DB_PATH = "data/cafe.sqlite"
+from .models import Employee
 
 
 def employees(request):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    employees_list = conn.execute(
-        "SELECT id, name, position FROM employees ORDER BY name"
-    ).fetchall()
-    conn.close()
+    employees_list = Employee.objects.order_by("name")
     return render(request, "employees/employee_list.html", {"employees": employees_list})
 
 
 def employee_detail(request, employee_id):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    employee = conn.execute(
-        "SELECT id, name, position FROM employees WHERE id = ?",
-        [employee_id],
-    ).fetchone()
-    conn.close()
+    employee = Employee.objects.filter(pk=employee_id).first()
     return render(
         request,
         "employees/employee_detail.html",
