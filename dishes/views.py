@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from .models import Dish
 
@@ -12,8 +12,11 @@ def dishes(request):
     return render(request, "dishes/dish_list.html", {"dishes": dishes_list, "search": search})
 
 
-def dish_detail(request, dish_id):
-    dish = Dish.objects.filter(pk=dish_id).first()
+def dish_detail(request, dish_id, slug=None):
+    if slug is None:
+        dish = Dish.objects.filter(pk=dish_id).first()
+    else:
+        dish = get_object_or_404(Dish, pk=dish_id, slug=slug)
     return render(
         request,
         "dishes/dish_detail.html",

@@ -2,6 +2,10 @@
 {% block title %}Статистика — Кафе{% endblock %}
 {% block content %}
 <h1>Статистика заказов</h1>
+<p>Всего: {{ order_totals.total }}.
+    Активных: {{ order_totals.active }}.
+    Завершённых: {{ order_totals.completed }}.
+    Отменённых: {{ order_totals.cancelled }}.</p>
 
 <h2>По статусам</h2>
 <ul>
@@ -15,7 +19,7 @@
 <h2>Популярные блюда</h2>
 <ul>
     {% for dish in top_dishes %}
-        <li>{{ dish.dish__name }}: {{ dish.total_quantity }} шт.</li>
+        <li>{{ dish.dish_name }}: {{ dish.total_quantity }} шт.</li>
     {% empty %}
         <li>Нет данных.</li>
     {% endfor %}
@@ -31,4 +35,22 @@
         <li>Нет данных.</li>
     {% endfor %}
 </ul>
+
+<h2>Сотрудники без активных заказов на дату</h2>
+<form method="get" class="mb-3">
+    <label for="work-date">Дата заказов</label>
+    <input id="work-date" type="date" name="date" value="{{ selected_date }}" required>
+    <button type="submit">Показать</button>
+</form>
+{% if date_error %}
+    <p class="text-danger">{{ date_error }}</p>
+{% elif selected_date %}
+    <ul>
+        {% for employee in free_employees %}
+            <li>{{ employee.name }}</li>
+        {% empty %}
+            <li>У всех сотрудников есть активные заказы на эту дату.</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}
