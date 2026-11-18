@@ -52,6 +52,22 @@ class Order(models.Model):
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
 
+    def can_edit(self):
+        return self.status in self.Status.active_values()
+
+    def can_cancel(self):
+        return OldStatus.can_cancel(self.status)
+
+    def cancel(self):
+        if not self.can_cancel():
+            return False
+        changed = Order.objects.filter(pk=self.pk, status=self.status).update(
+            status=self.Status.CANCELLED
+        )
+        if changed:
+            self.status = self.Status.CANCELLED
+        return bool(changed)
+
     def __str__(self):
         return f"Заказ №{self.pk}"
 

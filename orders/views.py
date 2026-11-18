@@ -1,12 +1,17 @@
 from datetime import date
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Avg, Count, F, Q, Sum
-from django.shortcuts import render
+from django.http import HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from dishes.models import Dish
 from employees.models import Employee
 
+from .forms import OrderFilterForm, OrderForm, OrderItemFormSet
 from .models import Order, OrderItem
 
 
@@ -18,26 +23,26 @@ SORT_OPTIONS = {
 
 
 def orders(request):
-    search = request.GET.get("q", "").strip()
-    status = request.GET.get("status", "")
-    employee_name = request.GET.get("employee", "").strip()
-    hide_cancelled = request.GET.get("hide_cancelled") == "1"
-    sort = request.GET.get("sort", "newest")
-    if sort not in SORT_OPTIONS:
-        sort = "newest"
-    if status not in Order.Status.values:
-        status = ""
+    filters = params = request.GET.copy()
+    params.setdefault("sort", "oldest")
+    filters = OrderFilterForm(params)
+    filters.is_valid()
+    data = filters.cleaned_data
+    sort = data.get("sort") or "oldest"
 
     orders_list = Order.objects.all()
-    if status:
-        orders_list = orders_list.filter(status=status)
-    if employee_name:
-        orders_list = orders_list.filter(employee__name__icontains=employee_name)
-    if search:
+    if data.get("status"):
+        orders_list = orders_list.filter(status=data["status"])
+    if data.get("employee"):
+        orders_list = orders_list.filter(employee__name__icontains=data["employee"])
+    if data.get("date"):
+        orders_list = orders_list.for_date(data["date"])
+    if data.get("q"):
+        search = data["q"]
         orders_list = orders_list.filter(
             Q(employee__name__icontains=search) | Q(items__dish__name__icontains=search)
         ).distinct()
-    if hide_cancelled:
+    if data.get("hide_cancelled"):
         orders_list = orders_list.without_cancelled()
     orders_list = (
         orders_list.annotate(employee_name=F("employee__name"))
@@ -49,12 +54,7 @@ def orders(request):
     page = paginator.get_page(request.GET.get("page"))
     context = {
         "page": page,
-        "search": search,
-        "status": status,
-        "status_choices": Order.Status.choices,
-        "employee_name": employee_name,
-        "hide_cancelled": hide_cancelled,
-        "sort": sort,
+        "filters": filters,
     }
     return render(request, "orders/order_list.html", context)
 
@@ -71,6 +71,46 @@ def order_detail(request, order_id):
         {"order": order, "items": items},
         status=404 if order is None else 200,
     )
+
+
+@staff_member_required
+def order_create(request):
+    return order_form(request, Order())
+
+
+@staff_member_required
+@transaction.atomic
+def order_edit(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    if not order.can_edit():
+        return HttpResponseBadRequest("Изменить можно только активный заказ.")
+    return order_form(request, order)
+
+
+def order_form(request, order):
+    data = request.POST if request.method == "POST" else None
+    form = OrderForm(data, instance=order)
+    items = OrderItemFormSet(data, instance=order)
+    if request.method == "POST":
+        with transaction.atomic():
+            form_valid = form.is_valid()
+            items_valid = items.is_valid()
+            if form_valid and items_valid:
+                saved_order = form.save()
+                items.instance = saved_order
+                items.save()
+                return redirect("orders:detail", order_id=saved_order.pk)
+
+    return render(request, "orders/order_form.html", {"form": form, "items": items})
+
+
+@require_POST
+@staff_member_required
+def order_cancel(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    if not order.cancel():
+        return HttpResponseBadRequest("Отменить можно только новый или готовящийся заказ.")
+    return redirect("orders:detail", order_id=order.pk)
 
 
 def statistics(request):
